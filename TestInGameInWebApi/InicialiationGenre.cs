@@ -10,7 +10,7 @@ namespace TestInGameInWebApi
             db.genreBooks.AddRange(
                 new List<GenreBook>
                 {
-                    new GenreBook {Name = "horror" },
+                    new GenreBook { Name = "horror" },
                     new GenreBook { Name = "Fantasy"},
                     new GenreBook { Name = "Comedy"}
                 });

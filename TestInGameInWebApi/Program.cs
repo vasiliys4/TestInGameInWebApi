@@ -21,8 +21,21 @@ app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+
+    using var scope = app.Services.CreateScope();
+    var db = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
+    db.Database.EnsureDeleted();
+    db.Database.EnsureCreated();
+
+    InicialiationGenre.Seeder(db);
+}
+
 app.MapGet("/weatherforecast", (ApplicationContext db) => db.Authors.ToList());
-app.MapGet("/weatherforecast/{id}", (ApplicationContext db, int id ) => db.Authors.FirstOrDefault(x => x.AuthorId == id));
+app.MapGet("/weatherforecast/{id}", (ApplicationContext db, int id) => db.Authors.FirstOrDefault(x => x.AuthorId == id));
 
 app.MapPost("/weatherforecast", (Author author, ApplicationContext db) =>
 {
@@ -30,7 +43,7 @@ app.MapPost("/weatherforecast", (Author author, ApplicationContext db) =>
     db.SaveChanges();
 });
 
-app.MapPut("/weatherforecast" , (ApplicationContext db, Author author) =>
+app.MapPut("/weatherforecast", (ApplicationContext db, Author author) =>
 {
     var s = db.Authors.FirstOrDefault(x => x.AuthorId == author.AuthorId);
     if (s is not null)
